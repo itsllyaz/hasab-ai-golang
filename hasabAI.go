@@ -120,7 +120,7 @@ func (c *Client) TTSRecord(recordID int) (*TTSRecordResponse, error){
 }
 
 
-func (c *Client) uploadAudio(filePath string, transcribe, translate bool, targetLanguage, sourceLanguage string) (*UploadAudioResponse, error) {
+func (c *Client) UploadAudio(filePath string, transcribe, translate bool, targetLanguage, sourceLanguage string) (*UploadAudioResponse, error) {
     file, err := os.Open(filePath)
     if err != nil {
         return nil, fmt.Errorf("cannot open file: %w", err)
@@ -174,10 +174,10 @@ func (c *Client) uploadAudio(filePath string, transcribe, translate bool, target
 
 // helper for transcription only
 func (c *Client) TranscribeAudio(filePath, sourceLanguage string) (*UploadAudioResponse, error) {
-    return c.uploadAudio(filePath, true, false, "", sourceLanguage)
+    return c.UploadAudio(filePath, true, false, "", sourceLanguage)
 }
 
 // helper for transcription + translation
 func (c *Client) TranslateAudio(filePath, sourceLanguage, targetLanguage string) (*UploadAudioResponse, error) {
-    return c.uploadAudio(filePath, true, true, targetLanguage, sourceLanguage)
+    return c.UploadAudio(filePath, true, true, targetLanguage, sourceLanguage)
 }

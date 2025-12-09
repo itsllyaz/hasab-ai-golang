@@ -163,7 +163,7 @@ func TestUploadAudioFunctions(t *testing.T) {
 
 	client := hasabai.New("test-api-key")
 
-	res, err := client.TranscribeAudioWithURL(tmpFile.Name(), "eng", server.URL)
+	res, err := client.TranscribeAudio(tmpFile.Name(), "eng")
 	if err != nil {
 		t.Fatalf("TranscribeAudioWithURL failed: %v", err)
 	}
@@ -171,8 +171,8 @@ func TestUploadAudioFunctions(t *testing.T) {
 		t.Errorf("Unexpected transcription: %s", res.Audio.Transcription)
 	}
 
-
-	res2, err := client.TranslateAudioWithURL(tmpFile.Name(), "eng", "amh", server.URL)
+	
+	res2, err := client.TranslateAudio(tmpFile.Name(), "eng", "amh")
 	if err != nil {
 		t.Fatalf("TranslateAudioWithURL failed: %v", err)
 	}
