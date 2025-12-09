@@ -2,6 +2,7 @@ package hasabai
 
 type HasabResponse struct {
     History []ChatHistory `json:"history"`
+	Success bool		  `json:"success"`
 }
 
 type ChatHistory struct {
@@ -22,6 +23,7 @@ type HasabTranscriptionResponse struct {
     MimeType         string `json:"mime_type"`
     DurationSeconds  string `json:"duration_in_seconds"`
     Description      string `json:"description"`
+	Success			 bool    `json:"success"`
     Transcription    string `json:"transcription"`
     Translation      string `json:"translation"`
     Summary          string `json:"summary"`
@@ -80,7 +82,8 @@ type HasabSpeakersResponse struct {
         Orm []string `json:"orm"`
         Tir []string `json:"tir"`
     } `json:"languages"`
-    TotalSpeakers int `json:"total_speakers"`
+    Success       bool `json:"success"`
+    TotalSpeakers int  `json:"total_speakers"`
 }
 
 
@@ -96,15 +99,17 @@ type TTSHistoryResponse struct {
         TokensUsed  int    `json:"tokens_used"`
         CreatedAt   string `json:"created_at"`
     } `json:"records"`
-    Total  int `json:"total"`
-    Limit  int `json:"limit"`
-    Offset int `json:"offset"`
+    Total     int `json:"total"`
+    Limit     int `json:"limit"`
+    Success   bool`json:"success"`
+    Offset    int `json:"offset"`
 }
 
 
 type TTSAnalyticsResponse struct {
     TotalRequests           int     `json:"total_requests"`
     SuccessfulRequests      int     `json:"successful_requests"`
+    Success                 bool    `json:"success"`
     FailedRequests          int     `json:"failed_requests"`
     TotalTokensUsed         int     `json:"total_tokens_used"`
     AverageTokensPerRequest float64 `json:"average_tokens_per_request"`
@@ -118,6 +123,7 @@ type TTSAnalyticsResponse struct {
 
 
 type TTSRecordResponse struct {
+    Success bool  `json:"success"`
     Record struct {
         ID          int    `json:"id"`
         Text        string `json:"text"`
@@ -128,4 +134,14 @@ type TTSRecordResponse struct {
         TokensUsed  int    `json:"tokens_used"`
         CreatedAt   string `json:"created_at"`
     } `json:"record"`
+}
+
+
+type UploadAudioResponse struct {
+    Success bool   `json:"success"`
+    Message string `json:"message"`
+    Audio   struct {
+        Transcription string `json:"transcription"`
+        Translation   string `json:"translation"`
+    } `json:"audio"`
 }

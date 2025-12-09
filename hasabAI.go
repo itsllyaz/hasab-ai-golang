@@ -1,8 +1,13 @@
 package hasabai
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
+	"io"
+	"mime/multipart"
+	"os"
+	"path/filepath"
 
 	"gopkg.in/resty.v1"
 )
@@ -110,6 +115,69 @@ func (c *Client) TTSRecord(recordID int) (*TTSRecordResponse, error){
 	if err := c.CallHasab(fmt.Sprintf("%s/%d", TTSRecordV1URL, recordID), &result); err != nil {
 		return nil , err 
 	}
-
+			
 	return &result, nil
+}
+
+
+func (c *Client) uploadAudio(filePath string, transcribe, translate bool, targetLanguage, sourceLanguage string) (*UploadAudioResponse, error) {
+    file, err := os.Open(filePath)
+    if err != nil {
+        return nil, fmt.Errorf("cannot open file: %w", err)
+    }
+    defer file.Close()
+
+    body := &bytes.Buffer{}
+    writer := multipart.NewWriter(body)
+
+    part, err := writer.CreateFormFile("file", filepath.Base(filePath))
+    if err != nil {
+        return nil, fmt.Errorf("create form file error: %w", err)
+    }
+    if _, err := io.Copy(part, file); err != nil {
+        return nil, fmt.Errorf("copy file error: %w", err)
+    }
+
+    _ = writer.WriteField("transcribe", fmt.Sprintf("%t", transcribe))
+    _ = writer.WriteField("translate", fmt.Sprintf("%t", translate))
+    _ = writer.WriteField("summarize", "false")
+    _ = writer.WriteField("source_language", sourceLanguage)
+    _ = writer.WriteField("language", targetLanguage)
+    _ = writer.WriteField("timestamps", "false")
+    _ = writer.WriteField("is_meeting", "false")
+    writer.Close()
+
+    client := resty.New()
+    resp, err := client.R().
+        SetHeader("Authorization", "Bearer "+c.ApiKey).
+        SetHeader("Content-Type", writer.FormDataContentType()).
+        SetHeader("Accept", "application/json").
+        SetBody(body).
+        Post("https://hasab.co/api/v1/upload-audio")
+
+    if err != nil {
+        return nil, fmt.Errorf("request error: %w", err)
+    }
+
+    if resp.StatusCode() >= 300 {
+        return nil, fmt.Errorf("bad status: %d, body: %s", resp.StatusCode(), resp.Body())
+    }
+
+    var result UploadAudioResponse
+    if err := json.Unmarshal(resp.Body(), &result); err != nil {
+        return nil, fmt.Errorf("unmarshal error: %w", err)
+    }
+
+    return &result, nil
+}
+
+
+// helper for transcription only
+func (c *Client) TranscribeAudio(filePath, sourceLanguage string) (*UploadAudioResponse, error) {
+    return c.uploadAudio(filePath, true, false, "", sourceLanguage)
+}
+
+// helper for transcription + translation
+func (c *Client) TranslateAudio(filePath, sourceLanguage, targetLanguage string) (*UploadAudioResponse, error) {
+    return c.uploadAudio(filePath, true, true, targetLanguage, sourceLanguage)
 }
