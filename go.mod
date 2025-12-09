@@ -1,6 +1,7 @@
 module github.com/itsllyaz/hasab-ai-golang
 
-go 1.25.4
+go 1.25
+
 
 require gopkg.in/resty.v1 v1.12.0
 
