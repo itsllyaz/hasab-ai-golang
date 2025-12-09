@@ -1,10 +1,6 @@
 ## Hasab AI Golang SDK 
 Unofficial Golang SDK for Hasab AI API (Audio transcription, translation, TTS, and more)
 
-### Todo:
-- [ ] We could add nice validations on demand.
-
-
 ### How to Use It
 ##### 1. Installation
 ```
@@ -28,7 +24,7 @@ Unofficial Golang SDK for Hasab AI API (Audio transcription, translation, TTS, a
 ```
 
 ##### 3. Upload Audio & Transcription
-```
+```go
     resp, err := client.TranscribeAudio("audio.mp3", "eng")
     if err != nil {
         fmt.Println("Transcription error:", err)
@@ -37,11 +33,10 @@ Unofficial Golang SDK for Hasab AI API (Audio transcription, translation, TTS, a
 
     fmt.Printf("Transcription result: %+v\n", resp)
 
-
 ```
 
 ##### 4. Upload Audio & Translation
-```
+```go
     resp, err := client.TranslateAudio("audio.mp3", "eng", "amh")
     if err != nil {
         fmt.Println("Translation error:", err)
@@ -54,7 +49,7 @@ Unofficial Golang SDK for Hasab AI API (Audio transcription, translation, TTS, a
 ```
 
 ##### 5. Fetch Hasab History
-```
+```go
     history, err := client.HasabHistory()
     if err != nil {
         fmt.Println("Error fetching history:", err)
@@ -63,11 +58,10 @@ Unofficial Golang SDK for Hasab AI API (Audio transcription, translation, TTS, a
     fmt.Printf("History: %+v\n", history)
 
 
-
 ```
 
 ##### 6. TTS & Analytics
-```
+```go
     ttsHistory, err := client.TTSHistory()
     if err != nil {
         fmt.Println("TTS history error:", err)
@@ -75,14 +69,12 @@ Unofficial Golang SDK for Hasab AI API (Audio transcription, translation, TTS, a
     }
     fmt.Printf("TTS history: %+v\n", ttsHistory)
 
-
-
-
 ```
 
 
 ### Resources
-- Hasab API Docs
+- [Hasab API Docs](https://developer.hasab.ai/)
+
 
 
 
